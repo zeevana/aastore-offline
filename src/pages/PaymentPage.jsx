@@ -18,40 +18,37 @@ const PaymentPage = () => {
     );
   }
 
-  const handlePayment = async () => {
-    if (isProcessing) return;
+const handlePayment = async () => {
+  if (isProcessing) return;
 
-    setIsProcessing(true);
-    setError(null);
+  setIsProcessing(true);
+  setError(null);
 
-    try {
-      const response = await fetch(
-        "/api/create-transaction",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            game: kelas.title,
-            item: selectedItem.type,
-            price: selectedItem.price,
-            formData: formData,
-          }),
-        }
-      );
+  try {
+    const response = await fetch("/api/create-transaction", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        game: kelas.title,
+        item: selectedItem.type,
+        price: selectedItem.price,
+        formData: formData,
+      }),
+    });
 
-      if (!response.ok) {
-        throw new Error("Gagal mendapatkan respons dari server");
-      }
-
-      alert("Pesanan berhasil dikirim! Admin akan segera memproses.");
-      navigate("/");
-
-    } catch (err) {
-      setError(err.message || "Terjadi kesalahan.");
-    } finally {
-      setIsProcessing(false);
+    if (!response.ok) {
+      throw new Error("Gagal mendapatkan respons dari server");
     }
-  };
+
+    alert("Pesanan berhasil dikirim!");
+    navigate("/");
+
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setIsProcessing(false);
+  }
+};
 
   return (
     <div style={styles.page}>
