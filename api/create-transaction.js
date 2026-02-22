@@ -3,30 +3,33 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  const { item, price, uid, server, phone } = req.body;
+  try {
+    const { game, item, price, formData } = req.body;
 
-  const BOT_TOKEN = "7970768014:AAFb9ziUZRL35c9uHmxfkkSgmDC-XWECXtk";
-  const CHAT_ID = "6042710123";
+    const BOT_TOKEN = process.env.BOT_TOKEN;
+    const CHAT_ID = process.env.CHAT_ID;
 
-  const message = `
+    // Buat isi data user secara dinamis
+    let userData = "";
+    for (const key in formData) {
+      userData += `📌 ${key}: ${formData[key]}\n`;
+    }
+
+    const message = `
 🛒 ORDER BARU MASUK
 
-🎮 Game: Genshin Impact
+🎮 Game: ${game}
 📦 Item: ${item}
 💰 Harga: Rp ${price}
-🆔 UID: ${uid}
-🌍 Server: ${server}
-📱 No HP: ${phone}
+
+${userData}
 
 Status: Siap Diproses
 `;
 
-  try {
     await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         chat_id: CHAT_ID,
         text: message,
@@ -34,7 +37,8 @@ Status: Siap Diproses
     });
 
     return res.status(200).json({ success: true });
+
   } catch (error) {
-    return res.status(500).json({ message: "Gagal kirim notifikasi" });
+    return res.status(500).json({ message: error.message });
   }
 }
