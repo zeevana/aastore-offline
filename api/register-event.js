@@ -14,7 +14,17 @@ export default async function handler(req, res) {
 
     const { userId, serverId, nickname } = req.body;
 
-    const exist = await db.collection("mlbb_event").findOne({ userId });
+    if (!userId || !serverId || !nickname) {
+
+      return res.status(400).json({
+        error: "Data tidak lengkap"
+      });
+
+    }
+
+    const exist = await db
+      .collection("mlbb_event")
+      .findOne({ userId });
 
     if (exist) {
 
@@ -25,17 +35,21 @@ export default async function handler(req, res) {
     }
 
     await db.collection("mlbb_event").insertOne({
+
       userId,
       serverId,
       nickname,
       createdAt: new Date()
+
     });
 
-    res.json({ success: true });
+    res.status(200).json({
+      success: true
+    });
 
-  } catch (err) {
+  } catch (error) {
 
-    console.error(err);
+    console.error(error);
 
     res.status(500).json({
       error: "Database error"

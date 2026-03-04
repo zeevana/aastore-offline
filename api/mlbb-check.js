@@ -4,6 +4,14 @@ export default async function handler(req, res) {
 
     const { userId, serverId } = req.body;
 
+    if (!userId || !serverId) {
+
+      return res.status(400).json({
+        error: "ID tidak lengkap"
+      });
+
+    }
+
     const response = await fetch(
       "https://api.duniagames.co.id/api/transaction/v1/top-up/inquiry/store",
       {
@@ -24,7 +32,7 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    if (!data.data) {
+    if (!data?.data?.gameDetail?.userName) {
 
       return res.status(400).json({
         error: "ID MLBB tidak valid"
@@ -32,13 +40,13 @@ export default async function handler(req, res) {
 
     }
 
-    res.json({
+    res.status(200).json({
       nickname: data.data.gameDetail.userName
     });
 
-  } catch (err) {
+  } catch (error) {
 
-    console.error(err);
+    console.error(error);
 
     res.status(500).json({
       error: "MLBB API error"

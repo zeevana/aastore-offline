@@ -90,23 +90,23 @@ const EventMLBB = () => {
 
             </Form.Group>
 
-            <div className="d-flex gap-2">
+           <div className="d-flex gap-2 mt-2">
 
-              <Button
-                variant="primary"
-                onClick={checkNickname}
-              >
-                Cek Nickname
-              </Button>
+  <Button
+    variant="primary"
+    onClick={checkNickname}
+  >
+    Cek Nickname
+  </Button>
 
-              <Button
-                variant="warning"
-                onClick={register}
-              >
-                Daftar Event
-              </Button>
+  <Button
+    variant="warning"
+    onClick={register}
+  >
+    Daftar Event
+  </Button>
 
-            </div>
+</div>
 
             {nickname && (
 

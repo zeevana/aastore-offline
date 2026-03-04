@@ -9,14 +9,14 @@ if (!uri) {
   throw new Error("MONGO_URI belum diisi");
 }
 
-if (!global._mongoClient) {
+if (!global._mongoClientPromise) {
 
   client = new MongoClient(uri);
 
-  global._mongoClient = client.connect();
+  global._mongoClientPromise = client.connect();
 
 }
 
-clientPromise = global._mongoClient;
+clientPromise = global._mongoClientPromise;
 
 export default clientPromise;
