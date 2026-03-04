@@ -1,14 +1,13 @@
-import { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { useState } from "react";
 
 const EventMLBB = () => {
 
   const [userId, setUserId] = useState("");
   const [serverId, setServerId] = useState("");
   const [nickname, setNickname] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const checkML = async () => {
+  const checkNickname = async () => {
 
     const res = await fetch("/api/mlbb-check", {
       method: "POST",
@@ -33,8 +32,6 @@ const EventMLBB = () => {
 
   const register = async () => {
 
-    setLoading(true);
-
     const res = await fetch("/api/register-event", {
       method: "POST",
       headers: {
@@ -52,13 +49,8 @@ const EventMLBB = () => {
     if (data.error) {
       alert(data.error);
     } else {
-      alert("Berhasil daftar event");
-      setUserId("");
-      setServerId("");
-      setNickname("");
+      alert("Berhasil daftar event!");
     }
-
-    setLoading(false);
 
   };
 
@@ -68,7 +60,7 @@ const EventMLBB = () => {
 
       <Row className="justify-content-center">
 
-        <Col lg="6">
+        <Col lg={6}>
 
           <h2 className="text-center mb-4">
             🔥 Event MLBB Starlight
@@ -98,32 +90,33 @@ const EventMLBB = () => {
 
             </Form.Group>
 
-            <Button
-              className="mb-3"
-              onClick={checkML}
-            >
-              Cek Nickname
-            </Button>
+            <div className="d-flex gap-2">
+
+              <Button
+                variant="primary"
+                onClick={checkNickname}
+              >
+                Cek Nickname
+              </Button>
+
+              <Button
+                variant="warning"
+                onClick={register}
+              >
+                Daftar Event
+              </Button>
+
+            </div>
 
             {nickname && (
 
-              <div className="alert alert-success">
+              <div className="alert alert-success mt-3">
 
-                Nickname ditemukan:
-
-                <b> {nickname}</b>
+                Nickname ditemukan: <b>{nickname}</b>
 
               </div>
 
             )}
-
-            <Button
-              variant="warning"
-              onClick={register}
-              disabled={loading}
-            >
-              Daftar Event
-            </Button>
 
           </Form>
 

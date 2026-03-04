@@ -1,22 +1,49 @@
-import { MongoClient } from "mongodb";
+export default async function handler(req, res) {
 
-const uri = process.env.MONGO_URI;
+  try {
 
-if (!uri) {
-  throw new Error("Tambahkan MONGO_URI di .env");
+    const { userId, serverId } = req.body;
+
+    const response = await fetch(
+      "https://api.duniagames.co.id/api/transaction/v1/top-up/inquiry/store",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          productId: "1",
+          itemId: "2",
+          catalogId: "57",
+          paymentId: "352",
+          gameId: userId,
+          zoneId: serverId
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!data.data) {
+
+      return res.status(400).json({
+        error: "ID MLBB tidak valid"
+      });
+
+    }
+
+    res.json({
+      nickname: data.data.gameDetail.userName
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: "MLBB API error"
+    });
+
+  }
+
 }
-
-let client;
-let clientPromise;
-
-if (!global._mongoClientPromise) {
-
-  client = new MongoClient(uri);
-
-  global._mongoClientPromise = client.connect();
-
-}
-
-clientPromise = global._mongoClientPromise;
-
-export default clientPromise;

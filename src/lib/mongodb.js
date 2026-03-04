@@ -5,26 +5,18 @@ const uri = process.env.MONGO_URI;
 let client;
 let clientPromise;
 
-if (!process.env.MONGO_URI) {
-  throw new Error("Tambahkan MONGO_URI di .env");
+if (!uri) {
+  throw new Error("MONGO_URI belum diisi");
 }
 
-if (process.env.NODE_ENV === "development") {
-
-  if (!global._mongoClientPromise) {
-
-    client = new MongoClient(uri);
-    global._mongoClientPromise = client.connect();
-
-  }
-
-  clientPromise = global._mongoClientPromise;
-
-} else {
+if (!global._mongoClient) {
 
   client = new MongoClient(uri);
-  clientPromise = client.connect();
+
+  global._mongoClient = client.connect();
 
 }
+
+clientPromise = global._mongoClient;
 
 export default clientPromise;

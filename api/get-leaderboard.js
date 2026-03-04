@@ -1,23 +1,36 @@
-import clientPromise from "../src/lib/mongodb";
+import clientPromise from "../src/lib/mongodb.js";
 
-export default async function handler(req,res){
+export default async function handler(req, res) {
 
- const client = await clientPromise;
- const db = client.db("aastore");
+  try {
 
- const players = await db
- .collection("mlbb_event")
- .find({})
- .sort({createdAt:-1})
- .limit(100)
- .toArray();
+    const client = await clientPromise;
 
- const leaderboard = players.map(p=>({
-  id:p._id,
-  nickname:p.nickname,
-  userId:p.userId
- }));
+    const db = client.db("aastore");
 
- res.json(leaderboard);
+    const players = await db
+      .collection("mlbb_event")
+      .find({})
+      .sort({ createdAt: -1 })
+      .limit(50)
+      .toArray();
+
+    const leaderboard = players.map((p) => ({
+      id: p._id,
+      nickname: p.nickname,
+      userId: p.userId
+    }));
+
+    res.status(200).json(leaderboard);
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: "Database error"
+    });
+
+  }
 
 }
