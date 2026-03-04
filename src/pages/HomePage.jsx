@@ -10,9 +10,9 @@ import FaqComponent from "../components/FaqComponent";
 const HomePage = () => {
 
   const navigate = useNavigate();
-
   const [players, setPlayers] = useState([]);
 
+  // Animasi bubble
   useEffect(() => {
 
     const bubbles = document.querySelectorAll(".bubble");
@@ -23,9 +23,10 @@ const HomePage = () => {
 
   }, []);
 
+  // Load leaderboard
   useEffect(() => {
 
-    const getPlayers = async () => {
+    const loadPlayers = async () => {
 
       try {
 
@@ -37,19 +38,30 @@ const HomePage = () => {
         }
 
       } catch (err) {
-
         console.log("Leaderboard error:", err);
-
       }
 
     };
 
-    getPlayers();
+    loadPlayers();
 
   }, []);
 
   const handleButtonClick = (kelasId) => {
     navigate(`/kelas/${kelasId}`);
+  };
+
+  const deletePlayer = async (id) => {
+
+    await fetch("/api/register-event", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ id })
+    });
+
+    setPlayers(players.filter(p => p.id !== id));
   };
 
   return (
@@ -102,6 +114,7 @@ const HomePage = () => {
         </Container>
 
       </header>
+
 
       {/* LIST GAME */}
 
@@ -156,9 +169,10 @@ const HomePage = () => {
 
       </div>
 
-      {/* EVENT SECTION */}
 
-      <div className="event-section py-5 bg-dark text-white">
+      {/* EVENT MLBB */}
+
+      <div className="event-section py-5">
 
         <Container>
 
@@ -166,7 +180,7 @@ const HomePage = () => {
 
             <Col>
 
-              <h2 className="text-warning">
+              <h2 className="event-title">
                 🔥 Event MLBB Starlight
               </h2>
 
@@ -193,7 +207,7 @@ const HomePage = () => {
                 Leaderboard Peserta
               </h4>
 
-              <table className="table table-dark table-striped text-center">
+              <table className="table leaderboard-table text-center">
 
                 <thead>
 
@@ -201,25 +215,43 @@ const HomePage = () => {
                     <th>#</th>
                     <th>Nickname</th>
                     <th>ID MLBB</th>
+                    <th>Admin</th>
                   </tr>
 
                 </thead>
 
                 <tbody>
 
-                  {players.length === 0 ? (
+                  {players.length === 0 && (
 
                     <tr>
-                      <td colSpan="3">Belum ada peserta</td>
+                      <td colSpan="4">
+                        Belum ada peserta
+                      </td>
                     </tr>
 
-                  ) : (
+                  )}
 
-                    players.map((player, index) => (
+                  {players.map((player, index) => {
 
-                      <tr key={player.id}>
+                    let rankClass = "";
 
-                        <td>{index + 1}</td>
+                    if (index === 0) rankClass = "rank-1";
+                    if (index === 1) rankClass = "rank-2";
+                    if (index === 2) rankClass = "rank-3";
+
+                    return (
+
+                      <tr key={player.id} className={rankClass}>
+
+                        <td>
+
+                          {index === 0 && "🥇"}
+                          {index === 1 && "🥈"}
+                          {index === 2 && "🥉"}
+                          {index > 2 && index + 1}
+
+                        </td>
 
                         <td>{player.nickname}</td>
 
@@ -227,11 +259,22 @@ const HomePage = () => {
                           {player.userId} ({player.serverId})
                         </td>
 
+                        <td>
+
+                          <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() => deletePlayer(player.id)}
+                          >
+                            Delete
+                          </button>
+
+                        </td>
+
                       </tr>
 
-                    ))
+                    );
 
-                  )}
+                  })}
 
                 </tbody>
 
@@ -244,6 +287,7 @@ const HomePage = () => {
         </Container>
 
       </div>
+
 
       <FaqComponent />
 

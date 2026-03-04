@@ -942,3 +942,31 @@
   cursor: not-allowed;
 }
 
+//event
+.event-section{
+background:#f2f4f7;
+}
+
+.event-title{
+color:#ffb300;
+font-weight:700;
+}
+
+.leaderboard-table{
+background:white;
+border-radius:12px;
+overflow:hidden;
+}
+
+.rank-1{
+background:#ffd700;
+font-weight:bold;
+}
+
+.rank-2{
+background:#e6e6e6;
+}
+
+.rank-3{
+background:#f4c27a;
+}

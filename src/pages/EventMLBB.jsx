@@ -11,6 +11,21 @@ const EventMLBB = () => {
 
   const [loading, setLoading] = useState(false);
 
+  const validateML = () => {
+
+    if (!/^[0-9]{5,12}$/.test(form.userId)) {
+      alert("User ID MLBB tidak valid");
+      return false;
+    }
+
+    if (!/^[0-9]{3,6}$/.test(form.serverId)) {
+      alert("Server ID tidak valid");
+      return false;
+    }
+
+    return true;
+  };
+
   const handleChange = (e) => {
 
     setForm({
@@ -24,103 +39,108 @@ const EventMLBB = () => {
 
     e.preventDefault();
 
+    if (!validateML()) return;
+
     setLoading(true);
 
-    try {
+    const res = await fetch("/api/register-event", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(form)
+    });
 
-      await fetch("/api/register-event", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(form)
-      });
+    const data = await res.json();
 
+    if (data.error) {
+      alert(data.error);
+    } else {
       alert("Berhasil daftar event!");
-
       setForm({
         nickname: "",
         userId: "",
         serverId: ""
       });
-
-    } catch (err) {
-
-      alert("Gagal daftar");
-
     }
 
     setLoading(false);
-
   };
 
   return (
-    <div className="py-5">
 
-      <Container>
+    <Container className="py-5">
 
-        <Row className="justify-content-center">
+      <Row className="justify-content-center">
 
-          <Col lg="6">
+        <Col lg="6">
 
-            <h2 className="text-center mb-4">
-              🔥 Event MLBB Starlight
-            </h2>
+          <h2 className="text-center mb-4">
+            🔥 Event MLBB Starlight
+          </h2>
 
-            <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit}>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Nickname MLBB</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="nickname"
-                  value={form.nickname}
-                  onChange={handleChange}
-                  required
-                />
-              </Form.Group>
+            <Form.Group className="mb-3">
 
-              <Form.Group className="mb-3">
-                <Form.Label>User ID</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="userId"
-                  value={form.userId}
-                  onChange={handleChange}
-                  required
-                />
-              </Form.Group>
+              <Form.Label>Nickname</Form.Label>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Server ID</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="serverId"
-                  value={form.serverId}
-                  onChange={handleChange}
-                  required
-                />
-              </Form.Group>
+              <Form.Control
+                name="nickname"
+                value={form.nickname}
+                onChange={handleChange}
+                required
+              />
 
-              <Button
-                variant="warning"
-                type="submit"
-                className="w-100"
-                disabled={loading}
-              >
-                {loading ? "Mendaftar..." : "Daftar Event"}
-              </Button>
+            </Form.Group>
 
-            </Form>
+            <Form.Group className="mb-3">
 
-          </Col>
+              <Form.Label>User ID</Form.Label>
 
-        </Row>
+              <Form.Control
+                name="userId"
+                value={form.userId}
+                onChange={handleChange}
+                required
+              />
 
-      </Container>
+            </Form.Group>
 
-    </div>
+            <Form.Group className="mb-3">
+
+              <Form.Label>Server ID</Form.Label>
+
+              <Form.Control
+                name="serverId"
+                value={form.serverId}
+                onChange={handleChange}
+                required
+              />
+
+            </Form.Group>
+
+            <Button
+              variant="warning"
+              className="w-100"
+              type="submit"
+              disabled={loading}
+            >
+
+              {loading ? "Mendaftar..." : "Daftar Event"}
+
+            </Button>
+
+          </Form>
+
+        </Col>
+
+      </Row>
+
+    </Container>
+
   );
+
 };
 
 export default EventMLBB;
