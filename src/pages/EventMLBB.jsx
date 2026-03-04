@@ -7,28 +7,36 @@ const EventMLBB = () => {
   const [serverId, setServerId] = useState("");
   const [nickname, setNickname] = useState("");
 
-  const checkNickname = async () => {
+ const checkNickname = async () => {
 
-    const res = await fetch("/api/mlbb-check", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        userId,
-        serverId
-      })
-    });
+  const res = await fetch("/api/mlbb-check", {
 
-    const data = await res.json();
+    method: "POST",
 
-    if (data.error) {
-      alert(data.error);
-    } else {
-      setNickname(data.nickname);
-    }
+    headers: {
+      "Content-Type": "application/json"
+    },
 
-  };
+    body: JSON.stringify({
+      userId,
+      serverId
+    })
+
+  });
+
+  const data = await res.json();
+
+  if (data.error) {
+
+    alert(data.error);
+
+  } else {
+
+    setNickname(data.nickname);
+
+  }
+
+};
 
   const register = async () => {
 

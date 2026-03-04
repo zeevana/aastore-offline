@@ -12,20 +12,20 @@ export default async function handler(req, res) {
       .collection("mlbb_event")
       .find({})
       .sort({ createdAt: -1 })
-      .limit(100)
+      .limit(50)
       .toArray();
 
-    const result = players.map((p) => ({
+    const leaderboard = players.map((p) => ({
       id: p._id,
       nickname: p.nickname,
       userId: p.userId
     }));
 
-    res.status(200).json(result);
+    res.status(200).json(leaderboard);
 
   } catch (error) {
 
-    console.error(error);
+    console.log(error);
 
     res.status(500).json({
       error: "Database error"
