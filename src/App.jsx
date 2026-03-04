@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-
+import EventMLBB from "./pages/EventMLBB";
 import HomePage from './pages/HomePage';
 import FaqPage from './pages/FaqPage';
 import NavbarComponent from './components/NavbarComponent';
@@ -22,6 +22,7 @@ function App() {
         <Route path="/kelas/:kelasId" element={<KelasDetail />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+        <Route path="/event" element={<EventMLBB />} />
       </Routes>
 
       <FooterComponent />
