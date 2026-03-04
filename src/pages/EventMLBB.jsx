@@ -1,63 +1,68 @@
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import { useState } from "react";
+import { Container, Row, Col, Form, Button, Card, Table } from "react-bootstrap";
+import { useEffect, useState } from "react";
 
 const EventMLBB = () => {
 
+  const [nickname, setNickname] = useState("");
   const [userId, setUserId] = useState("");
   const [serverId, setServerId] = useState("");
-  const [nickname, setNickname] = useState("");
 
- const checkNickname = async () => {
+  const [players, setPlayers] = useState([]);
 
-  const res = await fetch("/api/mlbb-check", {
+  const loadLeaderboard = async () => {
 
-    method: "POST",
+    const res = await fetch("/api/get-leaderboard");
+    const data = await res.json();
 
-    headers: {
-      "Content-Type": "application/json"
-    },
+    if (Array.isArray(data)) {
+      setPlayers(data);
+    }
 
-    body: JSON.stringify({
-      userId,
-      serverId
-    })
+  };
 
-  });
-
-  const data = await res.json();
-
-  if (data.error) {
-
-    alert(data.error);
-
-  } else {
-
-    setNickname(data.nickname);
-
-  }
-
-};
+  useEffect(() => {
+    loadLeaderboard();
+  }, []);
 
   const register = async () => {
 
+    if (!nickname || !userId || !serverId) {
+      alert("Isi semua field terlebih dahulu");
+      return;
+    }
+
     const res = await fetch("/api/register-event", {
+
       method: "POST",
+
       headers: {
         "Content-Type": "application/json"
       },
+
       body: JSON.stringify({
+        nickname,
         userId,
-        serverId,
-        nickname
+        serverId
       })
+
     });
 
     const data = await res.json();
 
     if (data.error) {
+
       alert(data.error);
+
     } else {
+
       alert("Berhasil daftar event!");
+
+      setNickname("");
+      setUserId("");
+      setServerId("");
+
+      loadLeaderboard();
+
     }
 
   };
@@ -66,67 +71,127 @@ const EventMLBB = () => {
 
     <Container className="py-5">
 
-      <Row className="justify-content-center">
+      <Row className="justify-content-center mb-5">
 
         <Col lg={6}>
 
-          <h2 className="text-center mb-4">
-            🔥 Event MLBB Starlight
-          </h2>
+          <Card className="shadow border-0">
 
-          <Form>
+            <Card.Body className="p-4">
 
-            <Form.Group className="mb-3">
+              <h2 className="text-center text-warning mb-4">
+                🔥 Event MLBB Starlight
+              </h2>
 
-              <Form.Label>ID MLBB</Form.Label>
+              <Form>
 
-              <Form.Control
-                value={userId}
-                onChange={(e) => setUserId(e.target.value)}
-              />
+                <Form.Group className="mb-3">
 
-            </Form.Group>
+                  <Form.Label>Nickname MLBB</Form.Label>
 
-            <Form.Group className="mb-3">
+                  <Form.Control
+                    placeholder="Masukkan nickname"
+                    value={nickname}
+                    onChange={(e)=>setNickname(e.target.value)}
+                  />
 
-              <Form.Label>Server ID</Form.Label>
+                </Form.Group>
 
-              <Form.Control
-                value={serverId}
-                onChange={(e) => setServerId(e.target.value)}
-              />
+                <Form.Group className="mb-3">
 
-            </Form.Group>
+                  <Form.Label>ID MLBB</Form.Label>
 
-           <div className="d-flex gap-2 mt-2">
+                  <Form.Control
+                    placeholder="Contoh: 91326804"
+                    value={userId}
+                    onChange={(e)=>setUserId(e.target.value)}
+                  />
 
-  <Button
-    variant="primary"
-    onClick={checkNickname}
-  >
-    Cek Nickname
-  </Button>
+                </Form.Group>
 
-  <Button
-    variant="warning"
-    onClick={register}
-  >
-    Daftar Event
-  </Button>
+                <Form.Group className="mb-4">
 
-</div>
+                  <Form.Label>Server ID</Form.Label>
 
-            {nickname && (
+                  <Form.Control
+                    placeholder="Contoh: 2185"
+                    value={serverId}
+                    onChange={(e)=>setServerId(e.target.value)}
+                  />
 
-              <div className="alert alert-success mt-3">
+                </Form.Group>
 
-                Nickname ditemukan: <b>{nickname}</b>
+                <div className="d-grid">
 
-              </div>
+                  <Button
+                    variant="warning"
+                    size="lg"
+                    onClick={register}
+                  >
+                    Daftar Event
+                  </Button>
 
-            )}
+                </div>
 
-          </Form>
+              </Form>
+
+            </Card.Body>
+
+          </Card>
+
+        </Col>
+
+      </Row>
+
+
+      {/* LEADERBOARD */}
+
+      <Row>
+
+        <Col lg={8} className="mx-auto">
+
+          <h3 className="text-center mb-4">
+            Leaderboard Peserta
+          </h3>
+
+          <Table striped bordered hover className="text-center">
+
+            <thead>
+
+              <tr>
+                <th>#</th>
+                <th>Nickname</th>
+                <th>ID MLBB</th>
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              {players.map((player,index)=>(
+
+                <tr key={player.id}>
+
+                  <td>
+
+                    {index === 0 && "🥇"}
+                    {index === 1 && "🥈"}
+                    {index === 2 && "🥉"}
+                    {index > 2 && index + 1}
+
+                  </td>
+
+                  <td>{player.nickname}</td>
+
+                  <td>{player.userId}</td>
+
+                </tr>
+
+              ))}
+
+            </tbody>
+
+          </Table>
 
         </Col>
 
