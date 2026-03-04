@@ -23,14 +23,15 @@ const HomePage = () => {
 
   }, []);
 
-  // Load leaderboard
+  // Ambil leaderboard dari database
   useEffect(() => {
 
-    const loadPlayers = async () => {
+    const loadLeaderboard = async () => {
 
       try {
 
-        const res = await fetch("/api/register-event");
+        const res = await fetch("/api/get-leaderboard");
+
         const data = await res.json();
 
         if (Array.isArray(data)) {
@@ -38,30 +39,19 @@ const HomePage = () => {
         }
 
       } catch (err) {
+
         console.log("Leaderboard error:", err);
+
       }
 
     };
 
-    loadPlayers();
+    loadLeaderboard();
 
   }, []);
 
   const handleButtonClick = (kelasId) => {
     navigate(`/kelas/${kelasId}`);
-  };
-
-  const deletePlayer = async (id) => {
-
-    await fetch("/api/register-event", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ id })
-    });
-
-    setPlayers(players.filter(p => p.id !== id));
   };
 
   return (
@@ -215,7 +205,6 @@ const HomePage = () => {
                     <th>#</th>
                     <th>Nickname</th>
                     <th>ID MLBB</th>
-                    <th>Admin</th>
                   </tr>
 
                 </thead>
@@ -225,7 +214,7 @@ const HomePage = () => {
                   {players.length === 0 && (
 
                     <tr>
-                      <td colSpan="4">
+                      <td colSpan="3">
                         Belum ada peserta
                       </td>
                     </tr>
@@ -255,20 +244,7 @@ const HomePage = () => {
 
                         <td>{player.nickname}</td>
 
-                        <td>
-                          {player.userId} ({player.serverId})
-                        </td>
-
-                        <td>
-
-                          <button
-                            className="btn btn-danger btn-sm"
-                            onClick={() => deletePlayer(player.id)}
-                          >
-                            Delete
-                          </button>
-
-                        </td>
+                        <td>{player.userId}</td>
 
                       </tr>
 

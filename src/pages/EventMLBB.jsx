@@ -1,45 +1,37 @@
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useState } from "react";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 
 const EventMLBB = () => {
 
-  const [form, setForm] = useState({
-    nickname: "",
-    userId: "",
-    serverId: ""
-  });
-
+  const [userId, setUserId] = useState("");
+  const [serverId, setServerId] = useState("");
+  const [nickname, setNickname] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const validateML = () => {
+  const checkML = async () => {
 
-    if (!/^[0-9]{5,12}$/.test(form.userId)) {
-      alert("User ID MLBB tidak valid");
-      return false;
-    }
-
-    if (!/^[0-9]{3,6}$/.test(form.serverId)) {
-      alert("Server ID tidak valid");
-      return false;
-    }
-
-    return true;
-  };
-
-  const handleChange = (e) => {
-
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
+    const res = await fetch("/api/mlbb-check", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        userId,
+        serverId
+      })
     });
 
+    const data = await res.json();
+
+    if (data.error) {
+      alert(data.error);
+    } else {
+      setNickname(data.nickname);
+    }
+
   };
 
-  const handleSubmit = async (e) => {
-
-    e.preventDefault();
-
-    if (!validateML()) return;
+  const register = async () => {
 
     setLoading(true);
 
@@ -48,7 +40,11 @@ const EventMLBB = () => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(form)
+      body: JSON.stringify({
+        userId,
+        serverId,
+        nickname
+      })
     });
 
     const data = await res.json();
@@ -56,15 +52,14 @@ const EventMLBB = () => {
     if (data.error) {
       alert(data.error);
     } else {
-      alert("Berhasil daftar event!");
-      setForm({
-        nickname: "",
-        userId: "",
-        serverId: ""
-      });
+      alert("Berhasil daftar event");
+      setUserId("");
+      setServerId("");
+      setNickname("");
     }
 
     setLoading(false);
+
   };
 
   return (
@@ -79,30 +74,15 @@ const EventMLBB = () => {
             🔥 Event MLBB Starlight
           </h2>
 
-          <Form onSubmit={handleSubmit}>
+          <Form>
 
             <Form.Group className="mb-3">
 
-              <Form.Label>Nickname</Form.Label>
+              <Form.Label>ID MLBB</Form.Label>
 
               <Form.Control
-                name="nickname"
-                value={form.nickname}
-                onChange={handleChange}
-                required
-              />
-
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-
-              <Form.Label>User ID</Form.Label>
-
-              <Form.Control
-                name="userId"
-                value={form.userId}
-                onChange={handleChange}
-                required
+                value={userId}
+                onChange={(e) => setUserId(e.target.value)}
               />
 
             </Form.Group>
@@ -112,23 +92,37 @@ const EventMLBB = () => {
               <Form.Label>Server ID</Form.Label>
 
               <Form.Control
-                name="serverId"
-                value={form.serverId}
-                onChange={handleChange}
-                required
+                value={serverId}
+                onChange={(e) => setServerId(e.target.value)}
               />
 
             </Form.Group>
 
             <Button
+              className="mb-3"
+              onClick={checkML}
+            >
+              Cek Nickname
+            </Button>
+
+            {nickname && (
+
+              <div className="alert alert-success">
+
+                Nickname ditemukan:
+
+                <b> {nickname}</b>
+
+              </div>
+
+            )}
+
+            <Button
               variant="warning"
-              className="w-100"
-              type="submit"
+              onClick={register}
               disabled={loading}
             >
-
-              {loading ? "Mendaftar..." : "Daftar Event"}
-
+              Daftar Event
             </Button>
 
           </Form>
