@@ -2,31 +2,28 @@ import clientPromise from "../src/lib/mongodb.js";
 
 export default async function handler(req, res) {
 
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
   try {
 
     const client = await clientPromise;
-
     const db = client.db("aastore");
 
-    const { userId, serverId, nickname } = req.body;
+    const { nickname, userId, serverId } = req.body;
 
-    const exist = await db
-      .collection("mlbb_event")
-      .findOne({ userId });
-
-    if (exist) {
-
+    if (!nickname || !userId || !serverId) {
       return res.status(400).json({
-        error: "ID MLBB sudah terdaftar"
+        error: "Semua field harus diisi"
       });
-
     }
 
     await db.collection("mlbb_event").insertOne({
 
+      nickname,
       userId,
       serverId,
-      nickname,
       createdAt: new Date()
 
     });
@@ -37,7 +34,7 @@ export default async function handler(req, res) {
 
   } catch (error) {
 
-    console.log(error);
+    console.log("DATABASE ERROR:", error);
 
     res.status(500).json({
       error: "Database error"
