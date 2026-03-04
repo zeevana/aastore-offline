@@ -1,66 +1,124 @@
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useState } from "react";
 
 const EventMLBB = () => {
+
   const [form, setForm] = useState({
     nickname: "",
     userId: "",
     serverId: ""
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e) => {
+
     setForm({
       ...form,
       [e.target.name]: e.target.value
     });
+
   };
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
-    await fetch("/api/register-event", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(form)
-    });
+    setLoading(true);
 
-    alert("Berhasil daftar event!");
+    try {
+
+      await fetch("/api/register-event", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(form)
+      });
+
+      alert("Berhasil daftar event!");
+
+      setForm({
+        nickname: "",
+        userId: "",
+        serverId: ""
+      });
+
+    } catch (err) {
+
+      alert("Gagal daftar");
+
+    }
+
+    setLoading(false);
+
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Daftar Event MLBB Starlight</h2>
+    <div className="py-5">
 
-      <form onSubmit={handleSubmit}>
+      <Container>
 
-        <input
-          type="text"
-          name="nickname"
-          placeholder="Nickname ML"
-          onChange={handleChange}
-          required
-        />
+        <Row className="justify-content-center">
 
-        <input
-          type="text"
-          name="userId"
-          placeholder="User ID ML"
-          onChange={handleChange}
-          required
-        />
+          <Col lg="6">
 
-        <input
-          type="text"
-          name="serverId"
-          placeholder="Server ID"
-          onChange={handleChange}
-          required
-        />
+            <h2 className="text-center mb-4">
+              🔥 Event MLBB Starlight
+            </h2>
 
-        <button type="submit">Daftar</button>
+            <Form onSubmit={handleSubmit}>
 
-      </form>
+              <Form.Group className="mb-3">
+                <Form.Label>Nickname MLBB</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="nickname"
+                  value={form.nickname}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>User ID</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="userId"
+                  value={form.userId}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Server ID</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="serverId"
+                  value={form.serverId}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+
+              <Button
+                variant="warning"
+                type="submit"
+                className="w-100"
+                disabled={loading}
+              >
+                {loading ? "Mendaftar..." : "Daftar Event"}
+              </Button>
+
+            </Form>
+
+          </Col>
+
+        </Row>
+
+      </Container>
+
     </div>
   );
 };

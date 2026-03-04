@@ -1,8 +1,18 @@
-let participants = [];
+let players = [];
 
 export default function handler(req, res) {
+
+  if (req.method === "GET") {
+    return res.status(200).json(players);
+  }
+
   if (req.method === "POST") {
+
     const { nickname, userId, serverId } = req.body;
+
+    if (!nickname || !userId || !serverId) {
+      return res.status(400).json({ message: "Data tidak lengkap" });
+    }
 
     const newPlayer = {
       id: Date.now(),
@@ -11,12 +21,9 @@ export default function handler(req, res) {
       serverId
     };
 
-    participants.push(newPlayer);
+    players.push(newPlayer);
 
-    return res.status(200).json({ message: "Berhasil daftar", data: newPlayer });
+    return res.status(200).json(newPlayer);
   }
 
-  if (req.method === "GET") {
-    return res.status(200).json(participants);
-  }
 }
