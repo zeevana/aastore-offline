@@ -1,4 +1,24 @@
-import clientPromise from "../src/lib/mongodb.js";
+import { MongoClient } from "mongodb";
+
+const uri = process.env.MONGO_URI;
+
+let client;
+let clientPromise;
+
+if (!uri) {
+  throw new Error("MONGO_URI belum diisi di ENV");
+}
+
+if (!global._mongoClientPromise) {
+
+  client = new MongoClient(uri);
+
+  global._mongoClientPromise = client.connect();
+
+}
+
+clientPromise = global._mongoClientPromise;
+
 
 export default async function handler(req, res) {
 
@@ -9,14 +29,21 @@ export default async function handler(req, res) {
   try {
 
     const client = await clientPromise;
+
     const db = client.db("aastore");
 
-    const { nickname, userId, serverId } = req.body;
+    const body = req.body;
+
+    const nickname = body.nickname;
+    const userId = body.userId;
+    const serverId = body.serverId;
 
     if (!nickname || !userId || !serverId) {
+
       return res.status(400).json({
         error: "Semua field harus diisi"
       });
+
     }
 
     await db.collection("mlbb_event").insertOne({
@@ -28,15 +55,15 @@ export default async function handler(req, res) {
 
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true
     });
 
   } catch (error) {
 
-    console.log("DATABASE ERROR:", error);
+    console.log("REGISTER EVENT ERROR:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       error: "Database error"
     });
 
