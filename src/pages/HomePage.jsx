@@ -159,7 +159,7 @@ const HomePage = () => {
       </div>
 
 
-      {/* EVENT MLBB LEADERBOARD */}
+      {/* EVENT MLBB */}
 
       <div className="event-section py-5">
 
@@ -192,7 +192,79 @@ const HomePage = () => {
 
           </Row>
 
-          <Row>
+
+          {/* PODIUM TOP 3 */}
+
+          {players.length > 0 && (
+
+            <div className="podium-wrapper">
+
+              <div className="podium">
+
+                {players[1] && (
+
+                  <div className="podium-card second">
+
+                    <div className="podium-rank">🥈</div>
+
+                    <div className="podium-name">
+                      {players[1].nickname}
+                    </div>
+
+                    <div className="podium-id">
+                      {players[1].userId}
+                    </div>
+
+                  </div>
+
+                )}
+
+                {players[0] && (
+
+                  <div className="podium-card first">
+
+                    <div className="podium-rank">🥇</div>
+
+                    <div className="podium-name">
+                      {players[0].nickname}
+                    </div>
+
+                    <div className="podium-id">
+                      {players[0].userId}
+                    </div>
+
+                  </div>
+
+                )}
+
+                {players[2] && (
+
+                  <div className="podium-card third">
+
+                    <div className="podium-rank">🥉</div>
+
+                    <div className="podium-name">
+                      {players[2].nickname}
+                    </div>
+
+                    <div className="podium-id">
+                      {players[2].userId}
+                    </div>
+
+                  </div>
+
+                )}
+
+              </div>
+
+            </div>
+
+          )}
+
+
+          {/* TABLE RANK 4+ */}
+
+          <Row className="mt-5">
 
             <Col lg="8" className="mx-auto">
 
@@ -216,11 +288,11 @@ const HomePage = () => {
 
                   <tbody>
 
-                    {players.length === 0 && (
+                    {players.length <= 3 && (
 
                       <tr>
                         <td colSpan="3">
-                          Belum ada peserta
+                          Belum ada peserta lain
                         </td>
                       </tr>
 
@@ -228,24 +300,13 @@ const HomePage = () => {
 
                     {players.map((player, index) => {
 
-                      let rankClass = "";
-
-                      if (index === 0) rankClass = "rank-1";
-                      if (index === 1) rankClass = "rank-2";
-                      if (index === 2) rankClass = "rank-3";
+                      if (index < 3) return null;
 
                       return (
 
-                        <tr key={player._id} className={rankClass}>
+                        <tr key={player._id}>
 
-                          <td>
-
-                            {index === 0 && "🥇"}
-                            {index === 1 && "🥈"}
-                            {index === 2 && "🥉"}
-                            {index > 2 && index + 1}
-
-                          </td>
+                          <td>{index + 1}</td>
 
                           <td>{player.nickname}</td>
 
