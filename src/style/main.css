@@ -3,19 +3,12 @@
 }
 
 :root {
-
---primary-gradient: linear-gradient(
-135deg,
-#2d336e 0%,
-#5b61c9 50%,
-#5b82d6 100%
-);
-
---card-bg: #ffffff;
---text-light: #ffffff;
---text-dark: #0c0c0c;
-
-}
+    --primary-color: #f6f8fd;
+    --secondary-color: #ffffff;
+    --color-text: #0c0c0c;
+    --navbar-color: #ffffff;
+    --navbar-color-text: #ffffff;
+  }
 /*STYLE NAVBAR*/
 .navbar {
     position: fixed;
@@ -188,12 +181,9 @@
 }
 
 /*STYLE HOMEPAGE LIST*/
-.homepage{
-background: var(--primary-gradient);
-color: var(--text-light);
-}
-.homepage .kelas{
-background: transparent;
+.homepage .kelas {
+    background-color: var(--primary-color);
+    padding-bottom: 20px;
 }
 
 .homepage .kelas .row:nth-child(1){
@@ -241,8 +231,11 @@ background: transparent;
 /* FAQ */
 
 .faq{
-background: transparent;
+    padding-top: 100px;
+    padding-bottom: 100px;
+    background-color: var(--primary-color);
 }
+
 .faq h2 {
     color: var(--color-text);
 }
@@ -284,8 +277,8 @@ background: transparent;
 
 /* STYLE FOOTEr */
 .footer{
-background: transparent;
-color:white;
+    width: 100%;
+    min-height: 10vh;
 }
 
 .footer .row:nth-child(1) .col:nth-child(1) h3{
@@ -460,25 +453,7 @@ color:white;
   .btn1:active {
     transform: translateY(1px); /* Menggeser tombol sedikit ke bawah saat ditekan */
   }
-.image-button{
 
-background:white;
-
-padding:15px;
-
-border-radius:12px;
-
-transition:0.3s;
-
-}
-
-.image-button:hover{
-
-transform:translateY(-5px);
-
-box-shadow:0 10px 20px rgba(0,0,0,0.2);
-
-}
   @media screen and (max-width: 768px) {
     .btn1 {
       padding: 8px 12px; /* Mengurangi padding pada tombol saat layar ponsel */
@@ -796,8 +771,8 @@ box-shadow:0 10px 20px rgba(0,0,0,0.2);
   }
   
   .header {
-background: transparent;
-}
+    margin-bottom: 30px;
+  }
   
   .logo-container {
     margin: 0 auto;
@@ -971,7 +946,14 @@ background: transparent;
 
 .event-section{
 
-background: transparent;
+background: linear-gradient(
+135deg,
+#3a3f9f 0%,
+#5b61c9 50%,
+#7b7ff0 100%
+);
+
+color:white;
 
 }
 
@@ -982,15 +964,15 @@ font-weight:700;
 
 .leaderboard-card{
 
-background: var(--card-bg);
+background:white;
 
-color: var(--text-dark);
+color:black;
 
 padding:30px;
 
-border-radius:14px;
+border-radius:12px;
 
-box-shadow:0 10px 30px rgba(0,0,0,0.25);
+box-shadow:0 10px 25px rgba(0,0,0,0.15);
 
 }
 
