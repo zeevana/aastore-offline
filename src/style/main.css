@@ -948,7 +948,7 @@
 background:transparent;
 }
 
-.podium-container{
+.podium-wrapper{
 display:flex;
 justify-content:center;
 margin-top:40px;
@@ -957,30 +957,30 @@ margin-top:40px;
 .podium{
 display:flex;
 align-items:flex-end;
-gap:30px;
+gap:25px;
 }
 
-.podium-item{
+.podium-card{
 text-align:center;
+color:white;
 padding:20px;
 border-radius:10px;
 width:140px;
-color:white;
 }
 
-.podium-item.first{
+.first{
 background:#ffb400;
-height:160px;
+height:170px;
 }
 
-.podium-item.second{
+.second{
 background:#6c757d;
-height:130px;
+height:140px;
 }
 
-.podium-item.third{
+.third{
 background:#cd7f32;
-height:110px;
+height:120px;
 }
 
 .podium-rank{
@@ -989,17 +989,12 @@ margin-bottom:10px;
 }
 
 .podium-name{
-font-weight:700;
-font-size:16px;
+font-weight:bold;
 }
 
-.podium-id{
-font-size:13px;
-opacity:0.9;
-}
-
-.leaderboard-table{
+.leaderboard-card{
 background:white;
-border-radius:10px;
-overflow:hidden;
+padding:25px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.1);
 }
