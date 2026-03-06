@@ -163,174 +163,109 @@ const HomePage = () => {
 
       <div className="event-section py-5">
 
-        <Container>
+<Container>
 
-          <Row className="text-center mb-4">
+<Row className="text-center mb-4">
 
-            <Col>
+<Col>
 
-              <h2 className="event-title">
-                🔥 Event MLBB Starlight
-              </h2>
+<h2 className="event-title">
+🔥 Event MLBB Starlight
+</h2>
 
-              <p>
-                Daftar sekarang dan menangkan Starlight Card
-              </p>
+<p>
+Daftar sekarang dan menangkan Starlight Card
+</p>
 
-              <h5 className="mb-3">
-                Total Peserta : <b>{players.length}</b>
-              </h5>
+<h5 className="mb-3">
+Total Peserta : <b>{players.length}</b>
+</h5>
 
-              <button
-                className="btn btn-warning"
-                onClick={() => navigate("/event")}
-              >
-                Daftar Event
-              </button>
+<button
+className="btn btn-warning"
+onClick={() => navigate("/event")}
+>
+Daftar Event
+</button>
 
-            </Col>
+</Col>
 
-          </Row>
+</Row>
 
+<Row>
 
-          {/* PODIUM TOP 3 */}
+<Col lg="8" className="mx-auto">
 
-          {players.length > 0 && (
+<div className="leaderboard-card">
 
-            <div className="podium-wrapper">
+<h4 className="text-center mb-4">
 
-              <div className="podium">
+Leaderboard Peserta
 
-                {players[1] && (
+</h4>
 
-                  <div className="podium-card second">
+<div className="table-responsive">
 
-                    <div className="podium-rank">🥈</div>
+<table className="table leaderboard-table text-center">
 
-                    <div className="podium-name">
-                      {players[1].nickname}
-                    </div>
+<thead>
 
-                    <div className="podium-id">
-                      {players[1].userId}
-                    </div>
+<tr>
+<th>#</th>
+<th>Nickname</th>
+<th>ID MLBB</th>
+</tr>
 
-                  </div>
+</thead>
 
-                )}
+<tbody>
 
-                {players[0] && (
+{players.length === 0 && (
 
-                  <div className="podium-card first">
+<tr>
+<td colSpan="3">
+Belum ada peserta
+</td>
+</tr>
 
-                    <div className="podium-rank">🥇</div>
+)}
 
-                    <div className="podium-name">
-                      {players[0].nickname}
-                    </div>
+{players.map((player, index) => (
 
-                    <div className="podium-id">
-                      {players[0].userId}
-                    </div>
+<tr key={player._id}>
 
-                  </div>
+<td>
 
-                )}
+{index === 0 && "🥇"}
+{index === 1 && "🥈"}
+{index === 2 && "🥉"}
+{index > 2 && index + 1}
 
-                {players[2] && (
+</td>
 
-                  <div className="podium-card third">
+<td>{player.nickname}</td>
 
-                    <div className="podium-rank">🥉</div>
+<td>{player.userId}</td>
 
-                    <div className="podium-name">
-                      {players[2].nickname}
-                    </div>
+</tr>
 
-                    <div className="podium-id">
-                      {players[2].userId}
-                    </div>
+))}
 
-                  </div>
+</tbody>
 
-                )}
+</table>
 
-              </div>
+</div>
 
-            </div>
+</div>
 
-          )}
+</Col>
 
+</Row>
 
-          {/* TABLE RANK 4+ */}
+</Container>
 
-          <Row className="mt-5">
-
-            <Col lg="8" className="mx-auto">
-
-              <div className="leaderboard-card">
-
-                <h4 className="text-center mb-4">
-                  Leaderboard Peserta
-                </h4>
-
-                <table className="table leaderboard-table text-center">
-
-                  <thead>
-
-                    <tr>
-                      <th>#</th>
-                      <th>Nickname</th>
-                      <th>ID MLBB</th>
-                    </tr>
-
-                  </thead>
-
-                  <tbody>
-
-                    {players.length <= 3 && (
-
-                      <tr>
-                        <td colSpan="3">
-                          Belum ada peserta lain
-                        </td>
-                      </tr>
-
-                    )}
-
-                    {players.map((player, index) => {
-
-                      if (index < 3) return null;
-
-                      return (
-
-                        <tr key={player._id}>
-
-                          <td>{index + 1}</td>
-
-                          <td>{player.nickname}</td>
-
-                          <td>{player.userId}</td>
-
-                        </tr>
-
-                      );
-
-                    })}
-
-                  </tbody>
-
-                </table>
-
-              </div>
-
-            </Col>
-
-          </Row>
-
-        </Container>
-
-      </div>
+</div>
 
       <FaqComponent />
 
