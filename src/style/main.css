@@ -1,3 +1,9 @@
+ body{
+  margin:0;
+  padding:0;
+  background:#f6f8fd;
+}
+
 *{
     font-family: "Poppins", sans-serif;
 }
@@ -9,6 +15,8 @@
     --navbar-color: #ffffff;
     --navbar-color-text: #ffffff;
   }
+
+ 
 /*STYLE NAVBAR*/
 .navbar {
     position: fixed;
@@ -221,7 +229,7 @@
     line-height: 1.5;
 }
 
-.homepage .kelas ,.row.row:nth-child(3) {
+.homepage .kelas .row:nth-child(3) {
     padding-top: 100px;
 }
 
