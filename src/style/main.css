@@ -3,12 +3,19 @@
 }
 
 :root {
-    --primary-color: #f6f8fd;
-    --secondary-color: #ffffff;
-    --color-text: #0c0c0c;
-    --navbar-color: #ffffff;
-    --navbar-color-text: #ffffff;
-  }
+
+--primary-gradient: linear-gradient(
+135deg,
+#2d336e 0%,
+#5b61c9 50%,
+#5b82d6 100%
+);
+
+--card-bg: #ffffff;
+--text-light: #ffffff;
+--text-dark: #0c0c0c;
+
+}
 /*STYLE NAVBAR*/
 .navbar {
     position: fixed;
@@ -181,9 +188,12 @@
 }
 
 /*STYLE HOMEPAGE LIST*/
-.homepage .kelas {
-    background-color: var(--primary-color);
-    padding-bottom: 20px;
+.homepage{
+background: var(--primary-gradient);
+color: var(--text-light);
+}
+.homepage .kelas{
+background: transparent;
 }
 
 .homepage .kelas .row:nth-child(1){
@@ -231,11 +241,8 @@
 /* FAQ */
 
 .faq{
-    padding-top: 100px;
-    padding-bottom: 100px;
-    background-color: var(--primary-color);
+background: transparent;
 }
-
 .faq h2 {
     color: var(--color-text);
 }
@@ -277,8 +284,8 @@
 
 /* STYLE FOOTEr */
 .footer{
-    width: 100%;
-    min-height: 10vh;
+background: transparent;
+color:white;
 }
 
 .footer .row:nth-child(1) .col:nth-child(1) h3{
@@ -453,7 +460,25 @@
   .btn1:active {
     transform: translateY(1px); /* Menggeser tombol sedikit ke bawah saat ditekan */
   }
+.image-button{
 
+background:white;
+
+padding:15px;
+
+border-radius:12px;
+
+transition:0.3s;
+
+}
+
+.image-button:hover{
+
+transform:translateY(-5px);
+
+box-shadow:0 10px 20px rgba(0,0,0,0.2);
+
+}
   @media screen and (max-width: 768px) {
     .btn1 {
       padding: 8px 12px; /* Mengurangi padding pada tombol saat layar ponsel */
@@ -771,8 +796,8 @@
   }
   
   .header {
-    margin-bottom: 30px;
-  }
+background: transparent;
+}
   
   .logo-container {
     margin: 0 auto;
@@ -946,14 +971,7 @@
 
 .event-section{
 
-background: linear-gradient(
-135deg,
-#3a3f9f 0%,
-#5b61c9 50%,
-#7b7ff0 100%
-);
-
-color:white;
+background: transparent;
 
 }
 
@@ -964,15 +982,15 @@ font-weight:700;
 
 .leaderboard-card{
 
-background:white;
+background: var(--card-bg);
 
-color:black;
+color: var(--text-dark);
 
 padding:30px;
 
-border-radius:12px;
+border-radius:14px;
 
-box-shadow:0 10px 25px rgba(0,0,0,0.15);
+box-shadow:0 10px 30px rgba(0,0,0,0.25);
 
 }
 
