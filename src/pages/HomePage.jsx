@@ -31,7 +31,6 @@ const HomePage = () => {
       try {
 
         const res = await fetch("/api/get-leaderboard");
-
         const data = await res.json();
 
         if (Array.isArray(data)) {
@@ -160,7 +159,7 @@ const HomePage = () => {
       </div>
 
 
-      {/* EVENT MLBB */}
+      {/* EVENT MLBB LEADERBOARD */}
 
       <div className="event-section py-5">
 
@@ -178,6 +177,10 @@ const HomePage = () => {
                 Daftar sekarang dan menangkan Starlight Card
               </p>
 
+              <h5 className="mb-3">
+                Total Peserta : <b>{players.length}</b>
+              </h5>
+
               <button
                 className="btn btn-warning"
                 onClick={() => navigate("/event")}
@@ -193,68 +196,72 @@ const HomePage = () => {
 
             <Col lg="8" className="mx-auto">
 
-              <h4 className="text-center mb-3">
-                Leaderboard Peserta
-              </h4>
+              <div className="leaderboard-card">
 
-              <table className="table leaderboard-table text-center">
+                <h4 className="text-center mb-4">
+                  Leaderboard Peserta
+                </h4>
 
-                <thead>
+                <table className="table leaderboard-table text-center">
 
-                  <tr>
-                    <th>#</th>
-                    <th>Nickname</th>
-                    <th>ID MLBB</th>
-                  </tr>
-
-                </thead>
-
-                <tbody>
-
-                  {players.length === 0 && (
+                  <thead>
 
                     <tr>
-                      <td colSpan="3">
-                        Belum ada peserta
-                      </td>
+                      <th>#</th>
+                      <th>Nickname</th>
+                      <th>ID MLBB</th>
                     </tr>
 
-                  )}
+                  </thead>
 
-                  {players.map((player, index) => {
+                  <tbody>
 
-                    let rankClass = "";
+                    {players.length === 0 && (
 
-                    if (index === 0) rankClass = "rank-1";
-                    if (index === 1) rankClass = "rank-2";
-                    if (index === 2) rankClass = "rank-3";
-
-                    return (
-
-                      <tr key={player.id} className={rankClass}>
-
-                        <td>
-
-                          {index === 0 && "🥇"}
-                          {index === 1 && "🥈"}
-                          {index === 2 && "🥉"}
-                          {index > 2 && index + 1}
-
+                      <tr>
+                        <td colSpan="3">
+                          Belum ada peserta
                         </td>
-
-                        <td>{player.nickname}</td>
-
-                        <td>{player.userId}</td>
-
                       </tr>
 
-                    );
+                    )}
 
-                  })}
+                    {players.map((player, index) => {
 
-                </tbody>
+                      let rankClass = "";
 
-              </table>
+                      if (index === 0) rankClass = "rank-1";
+                      if (index === 1) rankClass = "rank-2";
+                      if (index === 2) rankClass = "rank-3";
+
+                      return (
+
+                        <tr key={player._id} className={rankClass}>
+
+                          <td>
+
+                            {index === 0 && "🥇"}
+                            {index === 1 && "🥈"}
+                            {index === 2 && "🥉"}
+                            {index > 2 && index + 1}
+
+                          </td>
+
+                          <td>{player.nickname}</td>
+
+                          <td>{player.userId}</td>
+
+                        </tr>
+
+                      );
+
+                    })}
+
+                  </tbody>
+
+                </table>
+
+              </div>
 
             </Col>
 
@@ -263,7 +270,6 @@ const HomePage = () => {
         </Container>
 
       </div>
-
 
       <FaqComponent />
 

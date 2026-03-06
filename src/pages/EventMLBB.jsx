@@ -1,33 +1,32 @@
-import { Container, Row, Col, Form, Button, Card, Table } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
+import { useState, useEffect } from "react";
 
 const EventMLBB = () => {
 
   const [nickname, setNickname] = useState("");
   const [userId, setUserId] = useState("");
   const [serverId, setServerId] = useState("");
+  const [total, setTotal] = useState(0);
 
-  const [players, setPlayers] = useState([]);
-
-  const loadLeaderboard = async () => {
+  const loadTotal = async () => {
 
     const res = await fetch("/api/get-leaderboard");
     const data = await res.json();
 
     if (Array.isArray(data)) {
-      setPlayers(data);
+      setTotal(data.length);
     }
 
   };
 
   useEffect(() => {
-    loadLeaderboard();
+    loadTotal();
   }, []);
 
   const register = async () => {
 
     if (!nickname || !userId || !serverId) {
-      alert("Isi semua field terlebih dahulu");
+      alert("Isi semua data");
       return;
     }
 
@@ -55,13 +54,13 @@ const EventMLBB = () => {
 
     } else {
 
-      alert("Berhasil daftar event!");
+      alert("Berhasil daftar!");
 
       setNickname("");
       setUserId("");
       setServerId("");
 
-      loadLeaderboard();
+      loadTotal();
 
     }
 
@@ -69,135 +68,102 @@ const EventMLBB = () => {
 
   return (
 
-    <Container className="py-5">
+    <div style={{background:"#f5f5f5",minHeight:"100vh"}}>
 
-      <Row className="justify-content-center mb-5">
+      <Container className="py-5">
 
-        <Col lg={6}>
+        <Row className="justify-content-center">
 
-          <Card className="shadow border-0">
+          <Col lg={6}>
 
-            <Card.Body className="p-4">
+            <Card className="shadow border-0">
 
-              <h2 className="text-center text-warning mb-4">
-                🔥 Event MLBB Starlight
-              </h2>
+              <Card.Body className="p-4">
 
-              <Form>
+                <h3 className="text-center mb-3">
 
-                <Form.Group className="mb-3">
+                  🔥 Event MLBB Starlight
 
-                  <Form.Label>Nickname MLBB</Form.Label>
+                </h3>
 
-                  <Form.Control
-                    placeholder="Masukkan nickname"
-                    value={nickname}
-                    onChange={(e)=>setNickname(e.target.value)}
-                  />
+                <p className="text-center text-muted">
 
-                </Form.Group>
+                  Daftar sekarang dan menangkan Starlight Card
 
-                <Form.Group className="mb-3">
+                </p>
 
-                  <Form.Label>ID MLBB</Form.Label>
+                <div className="text-center mb-4">
 
-                  <Form.Control
-                    placeholder="Contoh: 91326804"
-                    value={userId}
-                    onChange={(e)=>setUserId(e.target.value)}
-                  />
+                  <h5>Total Peserta</h5>
 
-                </Form.Group>
+                  <h2 style={{color:"#ffb400"}}>
 
-                <Form.Group className="mb-4">
+                    {total}
 
-                  <Form.Label>Server ID</Form.Label>
-
-                  <Form.Control
-                    placeholder="Contoh: 2185"
-                    value={serverId}
-                    onChange={(e)=>setServerId(e.target.value)}
-                  />
-
-                </Form.Group>
-
-                <div className="d-grid">
-
-                  <Button
-                    variant="warning"
-                    size="lg"
-                    onClick={register}
-                  >
-                    Daftar Event
-                  </Button>
+                  </h2>
 
                 </div>
 
-              </Form>
+                <Form>
 
-            </Card.Body>
+                  <Form.Group className="mb-3">
 
-          </Card>
+                    <Form.Label>Nickname MLBB</Form.Label>
 
-        </Col>
+                    <Form.Control
+                      value={nickname}
+                      onChange={(e)=>setNickname(e.target.value)}
+                    />
 
-      </Row>
+                  </Form.Group>
 
+                  <Form.Group className="mb-3">
 
-      {/* LEADERBOARD */}
+                    <Form.Label>ID MLBB</Form.Label>
 
-      <Row>
+                    <Form.Control
+                      value={userId}
+                      onChange={(e)=>setUserId(e.target.value)}
+                    />
 
-        <Col lg={8} className="mx-auto">
+                  </Form.Group>
 
-          <h3 className="text-center mb-4">
-            Leaderboard Peserta
-          </h3>
+                  <Form.Group className="mb-4">
 
-          <Table striped bordered hover className="text-center">
+                    <Form.Label>Server ID</Form.Label>
 
-            <thead>
+                    <Form.Control
+                      value={serverId}
+                      onChange={(e)=>setServerId(e.target.value)}
+                    />
 
-              <tr>
-                <th>#</th>
-                <th>Nickname</th>
-                <th>ID MLBB</th>
-              </tr>
+                  </Form.Group>
 
-            </thead>
+                  <div className="d-grid">
 
-            <tbody>
+                    <Button
+                      variant="warning"
+                      size="lg"
+                      onClick={register}
+                    >
+                      Daftar Event
+                    </Button>
 
-              {players.map((player,index)=>(
+                  </div>
 
-                <tr key={player.id}>
+                </Form>
 
-                  <td>
+              </Card.Body>
 
-                    {index === 0 && "🥇"}
-                    {index === 1 && "🥈"}
-                    {index === 2 && "🥉"}
-                    {index > 2 && index + 1}
+            </Card>
 
-                  </td>
+          </Col>
 
-                  <td>{player.nickname}</td>
+        </Row>
 
-                  <td>{player.userId}</td>
+      </Container>
 
-                </tr>
-
-              ))}
-
-            </tbody>
-
-          </Table>
-
-        </Col>
-
-      </Row>
-
-    </Container>
+    </div>
 
   );
 
