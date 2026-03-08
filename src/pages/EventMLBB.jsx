@@ -1,171 +1,205 @@
-import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Card, Spinner } from "react-bootstrap";
 import { useState, useEffect } from "react";
 
 const EventMLBB = () => {
 
-  const [nickname, setNickname] = useState("");
-  const [userId, setUserId] = useState("");
-  const [serverId, setServerId] = useState("");
-  const [total, setTotal] = useState(0);
+const [nickname,setNickname] = useState("");
+const [userId,setUserId] = useState("");
+const [serverId,setServerId] = useState("");
 
-  const loadTotal = async () => {
+const [total,setTotal] = useState(0);
+const [loading,setLoading] = useState(false);
 
-    const res = await fetch("/api/get-leaderboard");
-    const data = await res.json();
+const loadTotal = async ()=>{
 
-    if (Array.isArray(data)) {
-      setTotal(data.length);
-    }
+try{
 
-  };
+const res = await fetch("/api/get-leaderboard");
+const data = await res.json();
 
-  useEffect(() => {
-    loadTotal();
-  }, []);
+if(Array.isArray(data)){
+setTotal(data.length);
+}
 
-  const register = async () => {
+}catch(err){
+console.log("load total error",err);
+}
 
-    if (!nickname || !userId || !serverId) {
-      alert("Isi semua data");
-      return;
-    }
+};
 
-    const res = await fetch("/api/register-event", {
+useEffect(()=>{
+loadTotal();
+},[]);
 
-      method: "POST",
 
-      headers: {
-        "Content-Type": "application/json"
-      },
+const register = async ()=>{
 
-      body: JSON.stringify({
-        nickname,
-        userId,
-        serverId
-      })
+if(loading) return;
 
-    });
+if(!nickname || !userId || !serverId){
 
-    const data = await res.json();
+alert("Isi semua data");
 
-    if (data.error) {
+return;
 
-      alert(data.error);
+}
 
-    } else {
+setLoading(true);
 
-      alert("Berhasil daftar!");
+try{
 
-      setNickname("");
-      setUserId("");
-      setServerId("");
+const res = await fetch("/api/register-event",{
 
-      loadTotal();
+method:"POST",
 
-    }
+headers:{
+"Content-Type":"application/json"
+},
 
-  };
+body:JSON.stringify({
+nickname,
+userId,
+serverId
+})
 
-  return (
+});
 
-    <div style={{background:"#f5f5f5",minHeight:"100vh"}}>
+const data = await res.json();
 
-      <Container className="py-5">
+if(data.error){
 
-        <Row className="justify-content-center">
+alert(data.error);
 
-          <Col lg={6}>
+}else{
 
-            <Card className="shadow border-0">
+alert("Berhasil daftar!");
 
-              <Card.Body className="p-4">
+setNickname("");
+setUserId("");
+setServerId("");
 
-                <h3 className="text-center mb-3">
+loadTotal();
 
-                  🔥 Event MLBB Starlight
+}
 
-                </h3>
+}catch(err){
 
-                <p className="text-center text-muted">
+alert("Server error");
 
-                  Daftar sekarang dan menangkan Starlight Card
+}
 
-                </p>
+setLoading(false);
 
-                <div className="text-center mb-4">
+};
 
-                  <h5>Total Peserta</h5>
+return(
 
-                  <h2 style={{color:"#ffb400"}}>
+<div style={{background:"#f5f5f5",minHeight:"100vh"}}>
 
-                    {total}
+<Container className="py-5">
 
-                  </h2>
+<Row className="justify-content-center">
 
-                </div>
+<Col lg={6} md={8}>
 
-                <Form>
+<Card className="shadow border-0">
 
-                  <Form.Group className="mb-3">
+<Card.Body className="p-4">
 
-                    <Form.Label>Nickname MLBB</Form.Label>
+<h3 className="text-center mb-3">
 
-                    <Form.Control
-                      value={nickname}
-                      onChange={(e)=>setNickname(e.target.value)}
-                    />
+🔥 Event MLBB Starlight
 
-                  </Form.Group>
+</h3>
 
-                  <Form.Group className="mb-3">
+<p className="text-center text-muted">
 
-                    <Form.Label>ID MLBB</Form.Label>
+Daftar sekarang dan menangkan Starlight Card
 
-                    <Form.Control
-                      value={userId}
-                      onChange={(e)=>setUserId(e.target.value)}
-                    />
+</p>
 
-                  </Form.Group>
+<div className="text-center mb-4">
 
-                  <Form.Group className="mb-4">
+<h5>Total Peserta</h5>
 
-                    <Form.Label>Server ID</Form.Label>
+<h2 style={{color:"#ffb400"}}>
 
-                    <Form.Control
-                      value={serverId}
-                      onChange={(e)=>setServerId(e.target.value)}
-                    />
+{total}
 
-                  </Form.Group>
+</h2>
 
-                  <div className="d-grid">
+</div>
 
-                    <Button
-                      variant="warning"
-                      size="lg"
-                      onClick={register}
-                    >
-                      Daftar Event
-                    </Button>
+<Form>
 
-                  </div>
+<Form.Group className="mb-3">
 
-                </Form>
+<Form.Label>Nickname MLBB</Form.Label>
 
-              </Card.Body>
+<Form.Control
+value={nickname}
+onChange={(e)=>setNickname(e.target.value)}
+/>
 
-            </Card>
+</Form.Group>
 
-          </Col>
+<Form.Group className="mb-3">
 
-        </Row>
+<Form.Label>ID MLBB</Form.Label>
 
-      </Container>
+<Form.Control
+value={userId}
+onChange={(e)=>setUserId(e.target.value)}
+/>
 
-    </div>
+</Form.Group>
 
-  );
+<Form.Group className="mb-4">
+
+<Form.Label>Server ID</Form.Label>
+
+<Form.Control
+value={serverId}
+onChange={(e)=>setServerId(e.target.value)}
+/>
+
+</Form.Group>
+
+<div className="d-grid">
+
+<Button
+variant="warning"
+size="lg"
+onClick={register}
+disabled={loading}
+>
+
+{loading ? (
+<>
+<Spinner animation="border" size="sm" className="me-2"/>
+Loading...
+</>
+) : "Daftar Event"}
+
+</Button>
+
+</div>
+
+</Form>
+
+</Card.Body>
+
+</Card>
+
+</Col>
+
+</Row>
+
+</Container>
+
+</div>
+
+);
 
 };
 
