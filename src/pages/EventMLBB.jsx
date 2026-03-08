@@ -3,203 +3,243 @@ import { useState, useEffect } from "react";
 
 const EventMLBB = () => {
 
-const [nickname,setNickname] = useState("");
-const [userId,setUserId] = useState("");
-const [serverId,setServerId] = useState("");
+  const [nickname,setNickname] = useState("");
+  const [userId,setUserId] = useState("");
+  const [serverId,setServerId] = useState("");
 
-const [total,setTotal] = useState(0);
-const [loading,setLoading] = useState(false);
+  const [total,setTotal] = useState(0);
+  const [loading,setLoading] = useState(false);
 
-const loadTotal = async ()=>{
+  const loadTotal = async () => {
 
-try{
+    try{
 
-const res = await fetch("/api/get-leaderboard");
-const data = await res.json();
+      const res = await fetch("/api/get-leaderboard");
+      const data = await res.json();
 
-if(Array.isArray(data)){
-setTotal(data.length);
-}
+      if(Array.isArray(data)){
+        setTotal(data.length);
+      }
 
-}catch(err){
-console.log("load total error",err);
-}
+    }catch(err){
+      console.log("load total error",err);
+    }
 
-};
+  };
 
-useEffect(()=>{
-loadTotal();
-},[]);
+  useEffect(()=>{
+    loadTotal();
+  },[]);
 
 
-const register = async ()=>{
+  const register = async () => {
 
-if(loading) return;
+    if(loading) return;
 
-if(!nickname || !userId || !serverId){
+    if(!nickname || !userId || !serverId){
 
-alert("Isi semua data");
+      alert("Isi semua data");
 
-return;
+      return;
 
-}
+    }
 
-setLoading(true);
+    setLoading(true);
 
-try{
+    try{
 
-const res = await fetch("/api/register-event",{
+      const res = await fetch("/api/register-event",{
 
-method:"POST",
+        method:"POST",
 
-headers:{
-"Content-Type":"application/json"
-},
+        headers:{
+          "Content-Type":"application/json"
+        },
 
-body:JSON.stringify({
-nickname,
-userId,
-serverId
-})
+        body:JSON.stringify({
+          nickname,
+          userId,
+          serverId
+        })
 
-});
+      });
 
-const data = await res.json();
+      const data = await res.json();
 
-if(data.error){
+      if(data.error){
 
-alert(data.error);
+        alert(data.error);
 
-}else{
+      }else{
 
-alert("Berhasil daftar!");
+        alert("Berhasil daftar!");
 
-setNickname("");
-setUserId("");
-setServerId("");
+        setNickname("");
+        setUserId("");
+        setServerId("");
 
-loadTotal();
+        loadTotal();
 
-}
+      }
 
-}catch(err){
+    }catch(err){
 
-alert("Server error");
+      alert("Server error");
 
-}
+    }
 
-setLoading(false);
+    setLoading(false);
 
-};
+  };
 
-return(
 
-<div style={{background:"#f5f5f5",minHeight:"100vh"}}>
 
-<Container className="py-5">
+  return(
 
-<Row className="justify-content-center">
+    <div style={{background:"#f5f5f5",minHeight:"100vh"}}>
 
-<Col lg={6} md={8}>
+      <Container className="py-5">
 
-<Card className="shadow border-0">
+        <Row className="justify-content-center">
 
-<Card.Body className="p-4">
+          <Col lg={6} md={8}>
 
-<h3 className="text-center mb-3">
+            {/* CARD FORM */}
+            <Card className="shadow border-0 mb-4">
 
-🔥 Event MLBB Starlight
+              <Card.Body className="p-4">
 
-</h3>
+                <h3 className="text-center mb-3">
+                  🔥 Event MLBB Starlight
+                </h3>
 
-<p className="text-center text-muted">
+                <p className="text-center text-muted">
+                  Daftar sekarang dan menangkan Starlight Card
+                </p>
 
-Daftar sekarang dan menangkan Starlight Card
+                <div className="text-center mb-4">
 
-</p>
+                  <h5>Total Peserta</h5>
 
-<div className="text-center mb-4">
+                  <h2 style={{color:"#ffb400"}}>
+                    {total}
+                  </h2>
 
-<h5>Total Peserta</h5>
+                </div>
 
-<h2 style={{color:"#ffb400"}}>
+                <Form>
 
-{total}
+                  <Form.Group className="mb-3">
 
-</h2>
+                    <Form.Label>Nickname MLBB</Form.Label>
 
-</div>
+                    <Form.Control
+                      value={nickname}
+                      onChange={(e)=>setNickname(e.target.value)}
+                    />
 
-<Form>
+                  </Form.Group>
 
-<Form.Group className="mb-3">
+                  <Form.Group className="mb-3">
 
-<Form.Label>Nickname MLBB</Form.Label>
+                    <Form.Label>ID MLBB</Form.Label>
 
-<Form.Control
-value={nickname}
-onChange={(e)=>setNickname(e.target.value)}
-/>
+                    <Form.Control
+                      value={userId}
+                      onChange={(e)=>setUserId(e.target.value)}
+                    />
 
-</Form.Group>
+                  </Form.Group>
 
-<Form.Group className="mb-3">
+                  <Form.Group className="mb-4">
 
-<Form.Label>ID MLBB</Form.Label>
+                    <Form.Label>Server ID</Form.Label>
 
-<Form.Control
-value={userId}
-onChange={(e)=>setUserId(e.target.value)}
-/>
+                    <Form.Control
+                      value={serverId}
+                      onChange={(e)=>setServerId(e.target.value)}
+                    />
 
-</Form.Group>
+                  </Form.Group>
 
-<Form.Group className="mb-4">
+                  <div className="d-grid">
 
-<Form.Label>Server ID</Form.Label>
+                    <Button
+                      variant="warning"
+                      size="lg"
+                      onClick={register}
+                      disabled={loading}
+                    >
 
-<Form.Control
-value={serverId}
-onChange={(e)=>setServerId(e.target.value)}
-/>
+                      {loading ? (
+                        <>
+                          <Spinner animation="border" size="sm" className="me-2"/>
+                          Loading...
+                        </>
+                      ) : "Daftar Event"}
 
-</Form.Group>
+                    </Button>
 
-<div className="d-grid">
+                  </div>
 
-<Button
-variant="warning"
-size="lg"
-onClick={register}
-disabled={loading}
->
+                </Form>
 
-{loading ? (
-<>
-<Spinner animation="border" size="sm" className="me-2"/>
-Loading...
-</>
-) : "Daftar Event"}
+              </Card.Body>
 
-</Button>
+            </Card>
 
-</div>
 
-</Form>
 
-</Card.Body>
+            {/* RULES EVENT */}
+            <Card className="shadow border-0">
 
-</Card>
+              <Card.Body className="p-4">
 
-</Col>
+                <h4 className="mb-3 text-center">
+                  📜 Rules Event
+                </h4>
 
-</Row>
+                <ul style={{lineHeight:"1.8"}}>
 
-</Container>
+                  <li>
+                    Event ini berlaku pada <b>Season 40 Mobile Legends</b>.
+                  </li>
 
-</div>
+                  <li>
+                    Peserta yang <b>pertama kali mencapai rank Mythical Glory</b> akan mendapatkan hadiah <b>Starlight Card</b>.
+                  </li>
 
-);
+                  <li>
+                    Tidak ada peraturan khusus terkait cara bermain.
+                  </li>
+
+                  <li>
+                    Peserta <b>diperbolehkan bermain solo maupun melakukan team up</b> dengan peserta lain.
+                  </li>
+
+                  <li>
+                    Pemenang akan diverifikasi berdasarkan <b>timestamp dan bukti rank</b>.
+                  </li>
+
+                  <li>
+                    Keputusan penyelenggara bersifat <b>final</b>.
+                  </li>
+
+                </ul>
+
+              </Card.Body>
+
+            </Card>
+
+          </Col>
+
+        </Row>
+
+      </Container>
+
+    </div>
+
+  );
 
 };
 
